@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# Windows executables
+*.exe
+
+# Bot specific & Configs
+bot_config.json
+temp/
+
+# Test images and media
+*.jpg
+*.jpeg
+*.png
+*.heic
+*.webp
+
+# IDEs
+.idea/
+.vscode/
+*.swp
