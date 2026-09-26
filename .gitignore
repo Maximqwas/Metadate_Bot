@@ -13,6 +13,10 @@ ENV/
 # Windows executables
 *.exe
 
+# Build & distribution
+build/
+dist/
+
 # Bot specific & Configs
 bot_config.json
 temp/
