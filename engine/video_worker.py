@@ -13,7 +13,7 @@ from typing import Callable
 
 
 # Максимально допустимая длительность видео в секундах
-MAX_DURATION_SEC: float = 16.0
+MAX_DURATION_SEC: float = 3600.0
 
 
 def _get_ffmpeg_path() -> tuple[str, str]:

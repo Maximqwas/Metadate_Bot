@@ -13,6 +13,8 @@ import sys
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiogram.client.session.aiohttp import AiohttpSession
+from aiogram.client.telegram import TelegramAPIServer
 
 from bot.handlers import register_handlers
 
@@ -30,10 +32,10 @@ logging.basicConfig(
 logging.getLogger("aiogram").setLevel(logging.WARNING)
 
 
-def load_token() -> str:
+def load_config() -> dict:
     """
-    Читает Bot Token из bot_config.json.
-    Файл должен содержать {"token": "YOUR_BOT_TOKEN"}.
+    Читает конфигурацию из bot_config.json.
+    Файл должен содержать {"token": "YOUR_BOT_TOKEN", "local_api_server": "http://localhost:8081"}
 
     Raises:
         SystemExit: Если файл не найден или токен отсутствует.
@@ -60,20 +62,27 @@ def load_token() -> str:
         print("[ERROR] Поле 'token' в bot_config.json пустое или отсутствует.")
         sys.exit(1)
 
-    return token
+    return config
 
 
 async def main() -> None:
     """Основная функция запуска бота."""
-    token = load_token()
+    config = load_config()
+    token = config.get("token")
+    local_api_server = config.get("local_api_server")
 
     # Директория для временных файлов
     base_dir = os.path.dirname(os.path.abspath(__file__))
     temp_dir = os.path.join(base_dir, "temp")
     os.makedirs(temp_dir, exist_ok=True)
 
+    session = None
+    if local_api_server:
+        session = AiohttpSession(api=TelegramAPIServer.from_base(local_api_server))
+
     bot = Bot(
         token=token,
+        session=session,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
     dp = Dispatcher()
