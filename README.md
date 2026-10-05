@@ -1,99 +1,74 @@
 # Telegram Metadata Bot v1.0
 
-> Инструмент для автоматической подмены GPS-координат и данных устройства в фото и видео.
+> A tool for automatically spoofing GPS coordinates and device metadata in photos and videos.
 
 ---
 
-## 📁 Структура проекта
+## 📁 Project Structure
 
-```
+
 bot/
 ├── engine/
-│   ├── geo_data.py      # Координаты городов
-│   ├── exif_worker.py   # Работа с EXIF (PIL + piexif)
-│   └── video_worker.py  # Работа с видео (ffprobe + ffmpeg)
+│   ├── geo_data.py      # City coordinates
+│   ├── exif_worker.py   # EXIF manipulation (PIL + piexif)
+│   └── video_worker.py  # Video processing (ffprobe + ffmpeg)
 ├── bot/
-│   └── handlers.py      # Telegram-хэндлеры (aiogram)
-├── temp/                # Временные файлы (создаётся автоматически)
-├── main.py              # Точка входа CLI v1.0
-├── bot_config.json      # Конфигурация (токен)
+│   └── handlers.py      # Telegram handlers (aiogram)
+├── temp/                # Temporary files (created automatically)
+├── main.py              # CLI v1.0 entry point
+├── bot_config.json      # Configuration (token)
 └── requirements.txt
-```
 
 ---
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### 1. Установить зависимости
+### 1. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
-```
 
-### 2. Установить ffmpeg
-
-Скачайте [ffmpeg для Windows](https://ffmpeg.org/download.html) и поместите `ffmpeg.exe` и `ffprobe.exe` в:
-- Корень проекта (`d:\bot\`), **или**
-- Добавьте в системный PATH
-
-### 3. Вставить токен бота
-
-Отредактируйте файл `bot_config.json`:
-
-```json
+2. Install ffmpeg
+Download ffmpeg for Windows and place ffmpeg.exe and ffprobe.exe into:
+ * The project root (d:\bot\), or
+ * Add them to your system PATH
+3. Add Bot Token
+Edit bot_config.json:
 {
   "token": "123456789:ABCdefGHI..."
 }
-```
 
-### 4. Запустить бота
-
-```bash
+4. Run the Bot
 python main.py
-```
 
----
+🤖 Bot Commands
+| Command | Description |
+|---|---|
+| /start | Welcome message and instructions |
+| /geo | Select target city (interactive menu) |
+| /status | View current user settings |
+📋 Usage
+Device Calibration (Donor Photo)
+Send an original photo taken with your smartphone as a file (document).
+If the photo contains EXIF Make/Model tags, the bot will parse and store your device profile.
+> Default: Apple iPhone 15 Pro
+> 
+Image Processing
+Send a JPEG, PNG, or WEBP image as a file (document).
+The bot returns a JPEG with replaced GPS coordinates and device metadata.
+Video Processing
+Send an MP4 or MOV video as a file (document).
+Limit: Up to 16 seconds. No re-encoding — container-level metadata modification only.
+⚙️ Default Settings
+ * City: 🇳🇴 Trondheim, Norway (63.4305, 10.3951)
+ * Device: Apple iPhone 15 Pro
+🔧 Technical Details
+ * Framework: aiogram 3.x (async)
+ * EXIF: piexif + Pillow (PIL)
+ * Video: ffprobe (validation) + ffmpeg (stream copy, zero quality loss)
+ * Storage: In-memory (user_settings dict)
+ * Temp Files: temp/ folder — cleaned up in finally blocks
+ * Architecture: Modular, ready for v2.0 expansion (GUI + standalone EXE)
 
-## 🤖 Команды бота
+<FollowUp label="Сгенерировать полный рабочий код для всех модулей бота?" query="Напиши полный рабочий код для всех файлов проекта Telegram Metadata Bot v1.0"/>
 
-| Команда | Описание |
-|---------|----------|
-| `/start` | Приветствие и инструкция |
-| `/geo` | Выбор целевого города (меню) |
-| `/status` | Текущие настройки пользователя |
-
----
-
-## 📋 Использование
-
-### Калибровка устройства (донор-фото)
-Отправьте **как файл** оригинальное фото с вашего смартфона.  
-Если в фото есть EXIF с Make/Model — бот считает и запомнит марку и модель.
-
-> По умолчанию: `Apple iPhone 15 Pro`
-
-### Обработка изображений
-Отправьте **как файл** JPEG, PNG или WEBP.  
-Бот вернёт JPEG с подменёнными GPS-данными и данными устройства.
-
-### Обработка видео
-Отправьте **как файл** MP4 или MOV.  
-**Ограничение:** до 16 секунд. Перекодирования нет — только контейнерные метаданные.
-
----
-
-## ⚙️ Настройки по умолчанию
-
-- **Город:** 🇳🇴 Тронхейм, Норвегия (`63.4305, 10.3951`)
-- **Устройство:** Apple iPhone 15 Pro
-
----
-
-## 🔧 Технические детали
-
-- **Фреймворк:** aiogram 3.x (async)
-- **EXIF:** piexif + Pillow (PIL)
-- **Видео:** ffprobe (валидация) + ffmpeg (stream copy, без перекодирования)
-- **Хранение настроек:** в памяти (словарь `user_settings`)
-- **Временные файлы:** `temp/` — удаляются в блоке `finally`
-- **Архитектура:** модульная, готова к расширению до v2.0 (GUI + EXE)
