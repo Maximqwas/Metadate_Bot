@@ -1,4 +1,3 @@
-Here is the cleanly formatted README.md translated into English:
 # Telegram Metadata Bot v1.0
 
 > An automated tool for modifying GPS coordinates and device metadata in photos and videos via a Telegram bot.
