@@ -1,69 +1,61 @@
-# Telegram Metadata Bot v1.0
-
-> An automated tool for modifying GPS coordinates and device metadata in photos and videos via a Telegram bot.
-
----
-
-## 📁 Project Structure
-
-```text
+Telegram Metadata Bot v1.0
+> A tool for automatically spoofing GPS coordinates and device metadata in photos and videos.
+> 
+📁 Project Structure
 bot/
 ├── engine/
-│   ├── __init__.py
-│   ├── geo_data.py       # City coordinates database
-│   ├── exif_worker.py    # EXIF manipulation (Pillow + piexif)
-│   └── video_worker.py   # Video processing (ffprobe + ffmpeg)
+│   ├── geo_data.py      # City coordinates
+│   ├── exif_worker.py   # EXIF handling (PIL + piexif)
+│   └── video_worker.py  # Video processing (ffprobe + ffmpeg)
 ├── bot/
-│   ├── __init__.py
-│   └── handlers.py       # Telegram event handlers (aiogram 3.x)
-├── temp/                 # Temporary files directory (created automatically)
-├── main.py               # Application entry point
-├── bot_config.json       # Configuration file (bot token)
-└── requirements.txt      # Python dependencies
+│   └── handlers.py      # Telegram handlers (aiogram)
+├── temp/                # Temporary files (created automatically)
+├── main.py              # CLI v1.0 entry point
+├── bot_config.json      # Configuration (token)
+└── requirements.txt
 
 🚀 Quick Start
-1. Install Dependencies
-Ensure Python 3.10+ is installed, then run:
+1. Install dependencies
 pip install -r requirements.txt
 
-2. Install FFmpeg
-Video processing requires the ffmpeg and ffprobe binaries:
- * Option A: Download the package for your OS and add the binaries to your system PATH.
- * Option B (Windows): Place ffmpeg.exe and ffprobe.exe directly in the project root next to main.py.
-3. Configure Bot Token
-Create or edit bot_config.json:
+2. Install ffmpeg
+Download ffmpeg for Windows and place ffmpeg.exe and ffprobe.exe into:
+ * The project root (d:\bot\), or
+ * Add them to the system PATH
+3. Insert bot token
+Edit the bot_config.json file:
 {
-  "token": "123456789:ABCdefGHIjkLmNoPqRsTuVwXyZ"
+  "token": "123456789:ABCdefGHI..."
 }
 
-4. Run the Bot
+4. Run the bot
 python main.py
 
 🤖 Bot Commands
 | Command | Description |
 |---|---|
-| /start | Welcome message, usage guide, and initialization |
-| /geo | Interactive menu to select target city |
-| /status | View current user preferences (selected city, device profile) |
-📋 Usage Guide
-1. Device Calibration (Donor Photo)
-Send an original, uncompressed photo taken by your target smartphone as a file (document).
- * If the image contains Make and Model tags, the bot extracts and saves this camera profile for your session.
- * Default device profile: Apple iPhone 15 Pro.
-2. Image Processing
-Send any image in JPEG, PNG, or WEBP format as a document.
- * The bot converts the image to JPEG, applies the chosen GPS coordinates, and injects the calibrated device metadata.
-3. Video Processing
-Send a video in MP4 or MOV format as a document.
- * Limit: Up to 16 seconds duration.
- * Lossless Processing: Metadata injection occurs at the container level (-c copy) without re-encoding, preserving full audio and video quality.
+| /start | Welcome message and instructions |
+| /geo | Target city selection (menu) |
+| /status | Current user settings |
+📋 Usage
+Device calibration (donor photo)
+Send an original photo from your smartphone as a file.
+If the photo contains EXIF with Make/Model, the bot will read and save the make and model.
+> Default: Apple iPhone 15 Pro
+> 
+Image processing
+Send a JPEG, PNG, or WEBP as a file.
+The bot will return a JPEG with spoofed GPS data and device metadata.
+Video processing
+Send an MP4 or MOV as a file.
+Limit: up to 16 seconds. No re-encoding — container metadata only.
 ⚙️ Default Settings
  * City: 🇳🇴 Trondheim, Norway (63.4305, 10.3951)
  * Device: Apple iPhone 15 Pro
 🔧 Technical Details
- * Framework: aiogram 3.x (asynchronous event loop)
- * Image Processing: Pillow + piexif
- * Video Processing: ffprobe (metadata/duration validation) + ffmpeg (stream copy)
- * Session Storage: In-memory dictionary (user_settings)
- * Data Cleanup: Files in temp/ are automatically deleted inside finally blocks immediately after dispatch
- * Architecture: Modular structure ready for packaging into a standalone executable (PyInstaller) or upgrading to a v2.0 GUI
+ * Framework: aiogram 3.x (async)
+ * EXIF: piexif + Pillow (PIL)
+ * Video: ffprobe (validation) + ffmpeg (stream copy, no re-encoding)
+ * Settings storage: in-memory (user_settings dictionary)
+ * Temporary files: temp/ — removed in the finally block
+ * Architecture: modular, ready to expand to v2.0 (GUI + EXE)
